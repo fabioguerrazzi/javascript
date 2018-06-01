@@ -122,6 +122,13 @@ var ClickRaised = false;
 AnchorEditableObjects(); // quando viene carica il JS all'inclusione viene eseguito automaticamente il binding alle funzioni di live edit. commentalo ed eseguilo a mano se non vuoi che sia caricato sempre
 
 
+// log only if EECDebug is on, deactivate in production cos it logs lot of stuff
+
+function EECLog(msg) {
+    if (EECDebug) console.log(msg);
+}
+
+
 function AnchorEditableObjects() {
 
 
@@ -136,7 +143,7 @@ function AnchorEditableObjects() {
 
     $('.table-extra-editable').click(function () {
 
-        // carica tutti i dati della grid 
+        // load alla data contained in the visible grid (not paginated)
 
 
         fetchDataGrid(this);
@@ -144,10 +151,10 @@ function AnchorEditableObjects() {
     });
 
 
-    // per tutte le td che hanno cell-edit
+    // loops every td with cell-edit class
     $('.cell-edit').click(function () {
 
-        if (ClickRaised) return;
+        if (ClickRaised) return; // avoid useless events
 
         EECLog(' --- ');
         EECLog('click raised on editable cell');
@@ -237,13 +244,21 @@ function AnchorEditableObjects() {
 
         $('input:checkbox').change(function (e) {
 
+		   // checkbox changed
+		   
+		   e.preventDefault();
+		   var value= $(this).attr('checked') == 'checked';
+		   ApplyLocalChanges(CellData); //<-- function locale specifica della tabella se deve fare dei calcoli (es calcolare l'importo se cambia prezzo o qta) 
+		   LiveUpdate(CellData); // <-- qui invia le modifiche al server db
+		   ClickRaised = false;
+		   
           //  alert('clicked');
             //var nval = $(this).attr('checked') == 'checked';
             //e.preventDefault();
             //var data = nval;
             //CellValue = data;
             //CellData.newvalue = CellValue;
-            //ApplyLocalChanges(CellData); //<-- function locale specifica della tabella se deve fare dei calcoli (es calcolare l'importo se cambia prezzo o qta) 
+            //
             //LiveUpdate(CellData); // <-- qui invia le modifiche al server db
             //ClickRaised = false;
         });
@@ -501,6 +516,13 @@ function HandleInput(cls) {
     return tx;
 }
 
+
+/* ==================================================================================================================
+
+    fetchDataGrid collect all informations and attributes for all cells (editable and not) filling the GridData Array
+  
+   ==================================================================================================================
+*/
 function fetchDataGrid(me) {
 
     if (ClickRaised) return;
@@ -539,10 +561,13 @@ function fetchDataGrid(me) {
         var col = [];
 
         var row = $(this).attr('data-row');
-    //    console.log('data-row=' + row);
         if (isnull(row)) row = 0;
+		
+		EECLog('data-row=' + row);
+		
         cnt++;
-        // conta le colonne
+        
+		// columns count
         $(this).children("th").each(function (idx) {
             if (idx > cols) cols = idx;
         });
@@ -560,9 +585,10 @@ function fetchDataGrid(me) {
 
         });
 
-
+		
+		//for every cell collects all information that is going to send to ajax
         $(this).children("td").each(function (idx) {
-            // per ogni cella raccoglie le info che dopo dovra inviare ad ajax
+            
             //  console.log('loopcells ' +row+'\\'+idx +'\\' + fld[idx] + '\\' + $(this).attr('id') );
 
               i = (row * cols) + (idx + 1);
@@ -570,15 +596,15 @@ function fetchDataGrid(me) {
          //   if (cnt < 6) console.log(row + ',' + idx + ' , ' + i + ' = ' + fld[i] + ',value =' + $(this).text());
 
             GridData.push({
-                table: table,                // nome tabella
-                row: row,                    // indice della riga
-                idx: idx,                    // indice della colonna sulla riga
-                id: $(this).attr('id'),      // id univoco della cella (assicurati che sia univoco) 
-                field: fld[i],         // nome campo db
-                type: type[i],        // tipo di dati 
-                fieldkey: FieldKey,          // campo chiave
-                fieldkeytype: FieldKeyType,  // tipo di campo chiave 
-                value: $(this).text()        // valore  
+                table: table,                // table name
+                row: row,                    // row index
+                idx: idx,                    // index col within the row 
+                id: $(this).attr('id'),      // unique id for the grid (ensure be unique)
+                field: fld[i],         		 // field database name
+                type: type[i],        		 // data type 
+                fieldkey: FieldKey,          // database key field name
+                fieldkeytype: FieldKeyType,  // key data type
+                value: $(this).text()        // visible value of the cell  
             });
         });
 
@@ -587,7 +613,12 @@ function fetchDataGrid(me) {
 }
 
 
+/* ===================================================================================================================================================
 
+    getCell - retreive a single cell from the main Object array fetching by its id. It can be used for any other purpose in AplyLocal Changes
+  
+   ===================================================================================================================================================
+*/
 
 function getCell(id) {
 
@@ -612,12 +643,6 @@ function getCell(id) {
 }
 
 
-
-// log solo se il debug è attivo, da disattivare in produzione perche scrive parecchia roba
-
-function EECLog(msg) {
-    if (EECDebug) console.log(msg);
-}
 
 
 
@@ -658,8 +683,10 @@ function LiveUpdate(CellData) {
     if (isnull(CellData)
         || isnull(CellData.field)
         || isnull(CellData.type)) {
-        bootbox.alert('Attenzione, Non tutte le caratteristiche per l editing su grid sono state configurate correttamente. Nel th della colonna devi mettere data-dbfield con il nome della colonna sul db e data-dbtype con il tipo (string, int, float)');
-        //console.log('ajax non puo elaborare la richiesta LiveUpdate per la Extra-Editable function perche mancano le definizioni del campo o tipo (attributo data-dbfield e data-dbtype del td) )');
+       // bootbox.alert('Attenzione, Non tutte le caratteristiche per l editing su grid sono state configurate correttamente. Nel th della colonna devi mettere data-dbfield con il nome della colonna sul db e data-dbtype con il tipo (string, int, float)');
+       // EECLog('ajax non puo elaborare la richiesta LiveUpdate per la Extra-Editable function perche mancano le definizioni del campo o tipo (attributo data-dbfield e data-dbtype del td) )');
+	   
+	    bootbox.alert('Warning, Not all attributes found for editing the cell properly. The th column configure the data-dbfield attrib with the field name of the database, set the data-dbtype with the right data type of the field (allowed: string, int, float, date, bool)');
         return;
     }
 

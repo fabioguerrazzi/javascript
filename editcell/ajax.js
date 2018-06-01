@@ -39,8 +39,39 @@ function DoAjax(method, div, pid) {
      
 }
 
-function DoAjaxMethod(method, parms, pid) {
+function DoAjaxMethod(method, data, pid) {
 
+
+    var st = ' data.dati.Action = ' + data.dati.Action + '\r';
+	st += ' data.dati.Table = ' + data.dati.Table + '\r';
+	st += ' data.dati.Field = ' + data.dati.Field + '\r';
+	st += ' data.dati.FieldType = ' + data.dati.FieldType + '\r';
+	st += ' data.dati.FieldKey = ' + data.dati.FieldKey + '\r';
+	st += ' data.dati.FieldKeyType = ' + data.dati.FieldKeyType + '\r';
+	st += ' data.dati.Value = ' + data.dati.Value + '\r';
+    st += ' data.dati.OldValue = ' + data.dati.OldValue + '\r';
+	st += ' data.dati.RkID = ' + data.dati.RkID + '\r';
+	st += ' data.dati.TagID = ' + data.dati.TagID + '\r';
+	st += ' data.dati.RowNum = ' + data.dati.RowNum + '\r';
+	st += ' data.dati.ColNum = ' + data.dati.ColNum + '\r';
+	 
+	
+	
+	$('#result').text(st);
+	 //alert(st);
+	return;
+   /* data.dati.Table = CellData.table;
+    data.dati.Field = CellData.field;
+    data.dati.FieldType = CellData.type;
+    data.dati.FieldKey = CellData.fieldkey;
+    data.dati.FieldKeyType = CellData.fieldkeytype;
+    data.dati.Value = CellData.newvalue;
+    data.dati.OldValue = CellData.value;
+    data.dati.RkID = id;
+    data.dati.TagID = CellData.id;
+    data.dati.RowNum = CellData.row;
+    data.dati.ColNum = CellData.idx;
+*/
 
     /*
     method: la funzione in ajax (es: DeleteRecord), non restituisce risultati
@@ -70,7 +101,7 @@ function DoAjaxMethod(method, parms, pid) {
         type: 'POST',
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        data: JSON.stringify(parms),
+        data: JSON.stringify(data),
         success: function (response) {
             if (response.d !== "OK") showmessage('err', "err: " + response.d);
             postAjax(pid);

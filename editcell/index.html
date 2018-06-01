@@ -52,7 +52,7 @@
  
     <div class="panel-body">
         <div class="table-responsive small-font">
-            <table id="extra-table" data-dbTable="tblArticoli" data-dbFieldKey="artID" data-dbFieldKeyType="int" class="table table-striped table-bordered table-hover small-font table-extra-editable">
+            <table id="extra-table" data-dbTable="tblOrderProducts" data-dbFieldKey="PrdocutID" data-dbFieldKeyType="int" class="table table-striped table-bordered table-hover small-font table-extra-editable">
                 <thead>
                     <tr>
 					    <th>ID Art</th>
@@ -79,7 +79,7 @@
                         <td id="itm-1" class="itm-grid">1</td>
                         <td id="cod-1" class="itm-grid">TP01</td>
 						<td id="dat-1" class="itm-grid cell-edit">01/06/2018</td>
-						<td id="cat-1" data-component="myCategories" class="itm-grid cell-edit">Accessories</td>
+						<td id="cat-1" data-component="myCategories" class="itm-grid combo-save-text  cell-edit">Accessories</td>
                         <td id="dex-1" class="itm-grid cell-edit">Mouse PAD</td>
 						<td id="prc-1" class="itm-grid cell-edit text-right">9,90</td>
                         <td id="qta-1" class="itm-grid cell-edit text-right">1</td>
@@ -97,7 +97,7 @@
                         <td id="itm-2" class="itm-grid">2</td>
                         <td id="cod-2" class="itm-grid">2HDMI-SRS</td>
 						<td id="dat-2" class="itm-grid cell-edit">30/05/2018</td>
-						<td id="cat-2" data-component="myCategories" class="itm-grid cell-edit">IT Hardware</td>
+						<td id="cat-2" data-component="myCategories" class="itm-grid  combo-save-text cell-edit">IT Hardware</td>
                         <td id="dex-2" class="itm-grid cell-edit">Monitor SAMSUNG 2HDMI SRS 23"</td>
 						<td id="prc-2" class="itm-grid cell-edit text-right">299,99</td>
                         <td id="qta-2" class="itm-grid cell-edit text-right">1</td>
@@ -122,13 +122,9 @@
         
 
      <p class="bg-yellow">
-	   Editable DataTable - LiveEdit immediate update database and refresh
-     </p>
-	 <p class="bg-yellow">
-   Includi questo js nella pagina dove vuoi che il table diventi editable
+	   Editable DataTable - LiveEdit immediate update database and refresh. Includi questo js nella pagina dove vuoi che il table diventi editable
   requisiti di esempio: (tra due % sono intesi i dati variabili)
-     </p>
-	 <p class="bg-yellow">
+   
  aggiungi al tag table gli attributi 
     data-dbTable="<nome tabella sul db>" 
 	data-dbFieldKey="<campo chiave>" 
@@ -136,8 +132,7 @@
 	
 	e la class="table-extra-editable">
                
-     </p>
-	 <p class="bg-yellow">
+     
    sulle th, per le colonne che vuoi rendere editabili, aggiungi gli attributi
    
      data-dbfield="<nome campo>"        
@@ -147,7 +142,19 @@
   
   	 
 	 </p>
-
+	 
+	 <br>
+	 <br>
+	 <br>
+	 
+	 <div class="row">
+		 <div class=col-md-3></div>
+		  
+			<textarea rows="20"  id="result" cols="150"  >
+			 object result
+			</textarea>
+		 
+	</div>
 </body>
 
      <!-- Mainly scripts -->
@@ -189,27 +196,36 @@ function ApplyLocalChanges(CellData) {
     */
 
 	
-	// esempio di calcolo inline nostro
-    if (CellData.table == "OfferteSub") {
-        var ar = CellData.id.split('-')
-        var offSubId = ar[1];
-        var impTot = $('#prezzo-' + offSubId).text() * $('#qta-' + offSubId).text();
-        var impS = impTot * (1 - $('#sconto-' + offSubId).text() / 100);
-        var ivaCalcolata = impS * ($('#aliquota-' + offSubId).text() / 100);
-        var importo = impS + ivaCalcolata;
-
+	// inline calculation, for specific table we can add custom calculation client side here, or server side then reload page
+    if (CellData.table == "tblOrderProducts" ) {
+	    
+        var ar = CellData.id.split('-');
+        var item= ar[0];
+		var id = ar[1]; 
+		
+		
+		var qty=getCell("qta-"+id);
+		var price=getCell("prc-"+id);
+		var dis=getCell("dis-"+id);
+		
+		
+		var impTot = price.Value * qty.Value;
+		var impS = impTot * (1 - dis.Value / 100);
+		var Total = +impTot - +impS;
+	
         impTot = Math.round(impTot * 100) / 100;
         impS = Math.round(impS * 100) / 100;
-        ivaCalcolata = Math.round(ivaCalcolata * 100) / 100;
-        importo = Math.round(importo * 100) / 100;
+        Total = Math.round(Total * 100) / 100;
 
-        $('#impt-' + offSubId).text(impTot);
-        $('#imps-' + offSubId).text(impS);
-        $('#iva-' + offSubId).text(ivaCalcolata);
-        $('#imp-' + offSubId).text(importo);
+        
+        $('#grs-' + id).text(impTot);
+        $('#tot-' + id).text(Total);
+		
+		
     }
 
 
+	
 }
 
 	</script>
