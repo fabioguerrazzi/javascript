@@ -41,8 +41,8 @@ function DoAjax(method, div, pid) {
 
 function DoAjaxMethod(method, data, pid) {
 
-
-    var st = ' data.dati.Action = ' + data.dati.Action + '\r';
+ var st = ' This is the object that is going to be sent to ajax. On server side just create your sql statement easily in order to seek the record and update it \r\r';
+    st += ' data.dati.Action = ' + data.dati.Action + '\r';
 	st += ' data.dati.Table = ' + data.dati.Table + '\r';
 	st += ' data.dati.Field = ' + data.dati.Field + '\r';
 	st += ' data.dati.FieldType = ' + data.dati.FieldType + '\r';
