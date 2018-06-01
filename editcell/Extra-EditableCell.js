@@ -3,7 +3,8 @@
 Extra Editable Teble Cell - Fabio Guerrazzi per Extra.Cube - Handler per il LiveEdit di un oggetto Table
 v 1.0 20/04/2018 - input cell live update
 v 1.1 25/05/2018 - Aggiunto DropDown
-v 1.2 31/05/2018 - Aggiunto data-row sul tr per gestire il multilinea 
+v 1.2 31/05/2018 - added data-row on <tr> to handle multiline
+v 1.3 01/06/2018 - added checkbox  
 
 
 NON EDITARE Extra-EditableCells.js per operazioni case/switch specifiche, questo js deve rimanere astratto
@@ -115,7 +116,7 @@ var SelectedCell;                       // intera cella selezionata (con tutte l
 var LockCell = false;                   // serve a bloccare qualsiasi evento della cella quando è visualizzato il componente di editing
 var CellData;                           // Contenuto completo che viene inviato al server per la storing dei dato sul campo
 var CellId;                             // id del td selezionato
-var EECDebug = false;                    // verbose on/off
+var EECDebug = true;                    // verbose on/off
 var ClickRaised = false;
 
 AnchorEditableObjects(); // quando viene carica il JS all'inclusione viene eseguito automaticamente il binding alle funzioni di live edit. commentalo ed eseguilo a mano se non vuoi che sia caricato sempre
@@ -207,7 +208,8 @@ function AnchorEditableObjects() {
      
 
         if (CellData.isCheckBox) {
-            tx = HandleCheckBox(cls);
+         //   tx = HandleCheckBox(SelectedCell.find('.icheckbox_square-green'));
+            tx = SelectedCell;
         }
         else {
             var comp = SelectedCell.attr('data-component');  // se esiste questo attributo vuol dire che il tipo è un DROPDOWN con componente definito nell'id della proprieta (es data-component="myDropDown" dove l'id è di un select hidden)
@@ -232,6 +234,21 @@ function AnchorEditableObjects() {
 
         ClickRaised = true;
 
+
+        $('input:checkbox').change(function (e) {
+
+          //  alert('clicked');
+            //var nval = $(this).attr('checked') == 'checked';
+            //e.preventDefault();
+            //var data = nval;
+            //CellValue = data;
+            //CellData.newvalue = CellValue;
+            //ApplyLocalChanges(CellData); //<-- function locale specifica della tabella se deve fare dei calcoli (es calcolare l'importo se cambia prezzo o qta) 
+            //LiveUpdate(CellData); // <-- qui invia le modifiche al server db
+            //ClickRaised = false;
+        });
+
+
     });
 
 } // end AnchorEditableObjects 
@@ -239,7 +256,7 @@ function AnchorEditableObjects() {
 // ==========================================
 //   component HANDLERS 
 // ==========================================
-function HandleCheckBox(cls) {
+function HandleCheckBox(tx) {
 
     CellData.ComponentType = "checkbox";
     CellData.ComponentSaveMode = "bool";   // puo salvare true/false o 1/0 bit
@@ -249,18 +266,22 @@ function HandleCheckBox(cls) {
     //if(SelectedCell.hasClass('checkbox-save-bit') 
     //    CellData.ComponentSaveMode = "bit";
 
+    EECLog('HandleCheckBox firex');
+   
+    EECLog($(tx).attr('class'));
 
-    $(tx).on("click", function (e) {
-        var nval = $(this).attr('checked') == 'checked';
-        e.preventDefault();
-        var data = nval;
-        CellValue = data;
-        CellData.newvalue = CellValue;
-        ApplyLocalChanges(CellData); //<-- function locale specifica della tabella se deve fare dei calcoli (es calcolare l'importo se cambia prezzo o qta) 
-        LiveUpdate(CellData); // <-- qui invia le modifiche al server db
-        ClickRaised = false;
+    $(tx).on('click',function (e) {
+
+        alert('clicked');
+        //var nval = $(this).attr('checked') == 'checked';
+        //e.preventDefault();
+        //var data = nval;
+        //CellValue = data;
+        //CellData.newvalue = CellValue;
+        //ApplyLocalChanges(CellData); //<-- function locale specifica della tabella se deve fare dei calcoli (es calcolare l'importo se cambia prezzo o qta) 
+        //LiveUpdate(CellData); // <-- qui invia le modifiche al server db
+        //ClickRaised = false;
     });
-
 
     $(tx).on('focus', function () {
         $(this).select();
@@ -273,7 +294,7 @@ function HandleCheckBox(cls) {
     //    //  $(this).remove(); // destroy itself
      
     //})
-
+    return tx;
 
 }
 

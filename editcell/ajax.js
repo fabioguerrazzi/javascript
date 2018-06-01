@@ -1,6 +1,17 @@
 
 
+/*
 
+ This JS contains some helper functions used in the plugin
+ 
+*/
+function isnull(tag) { return isNull(tag); }
+function Isnull(tag) { return isNull(tag); }
+function IsNull(tag) { return isNull(tag); }
+
+function isNull(tag) {
+    return (tag == undefined || tag === "" || tag === "undefined" || tag === "NaN" || tag === "NAN" || tag === "nan");
+}
 
 
 function DoAjax(method, div, pid) {

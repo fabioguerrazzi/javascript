@@ -6,10 +6,14 @@
     <title></title>
     <link href="js/bootstrap.min.css" rel="stylesheet" />
     <link href="js/style.css" rel="stylesheet" />
+	 <link href="js/datapicker/bootstrap-datepicker.css" rel="stylesheet" />
 	
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 	<script src="js/bootbox.min.js"></script>
+	<script src="js/datapicker/bootstrap-datepicker.min.js"></script>
+	
+	
 	
 
 </head>
@@ -22,26 +26,48 @@
 <h2>Demo EditableCell</h2>
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Esempio Editable Grid by Extra 2018
+        Sample Editable Grid by Extra 2018
     </div>
+	
+	<div id="myCategories" class="hidden"> 
+		<select id="ldd-Categories" class="input-sm form-control input-s-sm inline">
+				<option value="1">Accessories</option>
+			   <option id="nVt7" value="2">IT Hardware</option>
+			   <option id="D9Tf" value="3">HI-FI Multimedia</option>
+			   <option id="yd0X" value="4">Mobile</option>
+		</select>
+    </div>
+	
+	<div id="myDiscounts" class="hidden"> 
+		<select id="ldd-Discounts" class="input-sm form-control input-s-sm inline">
+		   <option id="UYE7"  value="1">none</option>
+		   <option id="uye6"  value="5">5%</option>
+		   <option id="n8IuS" value="10">10%</option>
+		   <option id="p09U"  value="15">15%</option>
+		   <option id="kLi9"  value="50">50%</option>
+		</select>
+	</div>
+	 
+	
+ 
     <div class="panel-body">
         <div class="table-responsive small-font">
-            <table data-dbTable="tblArticoli" data-dbFieldKey="artID" data-dbFieldKeyType="int" class="table table-striped table-bordered table-hover small-font table-extra-editable">
+            <table id="extra-table" data-dbTable="tblArticoli" data-dbFieldKey="artID" data-dbFieldKeyType="int" class="table table-striped table-bordered table-hover small-font table-extra-editable">
                 <thead>
                     <tr>
-					    <th >ID Art</th>
-                        <th >Codice</th>
-                        <th  data-dbfield="Descrizione"   data-dbtype="string">Descrizione</th>
-                        <th  data-dbfield="Prezzo"              data-dbtype="float">Prezzo</th>
-                        <th  data-dbfield="Qta"                      data-dbtype="float">Qta</th>
+					    <th>ID Art</th>
+                        <th>Codice</th>
+						<th  data-dbfield="AcqDate"   	    	data-dbtype="date">Date</th>
+						<th  data-dbfield="CategoryId"   		data-dbtype="int">Category</th>
+                        <th  data-dbfield="Description"   		data-dbtype="string">Description</th>
+                        <th  data-dbfield="Price"               data-dbtype="float">Price</th>
+                        <th  data-dbfield="Qta"                 data-dbtype="float">Qta</th>
                         <th>Impon. Tot.</th>
-                        <th  data-dbfield="Sconto"                      data-dbtype="float">Sconto </th>
-                        <th>Impon. Sc.</th>
-                        <th  data-dbfield="IVAPerc"                    data-dbtype="float">Iva %</th>
-                        <th>Imposta</th>
-                        <th>Totale</th>
-                        
-                      
+                        <th  data-dbfield="Discount"            data-dbtype="float">% Discount</th>
+                        <th  data-dbfield="stockclosed"         data-dbtype="bool">*</th>
+                        <th>Gross</th>
+                        <th>Total</th>
+                    
                         
                     </tr>
                 </thead>
@@ -50,54 +76,41 @@
      
                     <tr>
                          
-                        <td id="id-1" class="itm-grid">1/td>
-                        <td id="code-1" data-type="date" class="itm-grid">TP01</td>
-                        <td id="dex-1" class="itm-grid cell-edit">Tappetino Mouse</td>
-                        <td id="prezzo-1" class="itm-grid cell-edit text-right">1.40</td>
-                        <td id="qta-1" class="itm-grid cell-edit text-right">2</td>
-                        <td id="impt-1" class="itm-grid text-right">1525</td>
-                        <td id="sconto-1" class="itm-grid cell-edit text-right">0</td>
-                        <td id="imps-1" class="itm-grid text-right  cell-edit">1125</td>
-                        <td id="aliquota-1" class="itm-grid text-right  cell-edit">20</td>
-                        <td id="iva-1" class="itm-grid text-right">215</td>
-                        <td id="imp-1" class="itm-grid text-right">1235</td>
+                        <td id="itm-1" class="itm-grid">1</td>
+                        <td id="cod-1" class="itm-grid">TP01</td>
+						<td id="dat-1" class="itm-grid cell-edit">01/06/2018</td>
+						<td id="cat-1" data-component="myCategories" class="itm-grid cell-edit">Accessories</td>
+                        <td id="dex-1" class="itm-grid cell-edit">Mouse PAD</td>
+						<td id="prc-1" class="itm-grid cell-edit text-right">9,90</td>
+                        <td id="qta-1" class="itm-grid cell-edit text-right">1</td>
+						<td id="amt-1" class="itm-grid text-right">8,80</td>
+                        <td id="dis-1"  data-component="myDiscounts" class="itm-grid combo-save-text cell-edit">none</td>
+						<td id="stk-1" class="itm-grid cell-edit" title="Is Out of stock?"><input id="ck-1" type="checkbox" title="Is Out of stock?" class="i-checks form-control form-inline" />  </td>
+                        <td id="grs-1" class="itm-grid text-right">8,80</td>
+                        <td id="tot-1" class="itm-grid text-right">8,80</td>
                          
 
                     </tr>
 
-       <tr>
+					<tr>
                          
-                        <td id="id-2" class="itm-grid">2</td>
-                        <td id="code-2" data-type="date" class="itm-grid">TP02</td>
-                        <td id="dex-2" class="itm-grid cell-edit">Tastiera 102 tasti IT</td>
-                        <td id="prezzo-2" class="itm-grid cell-edit text-right">12.2</td>
+                        <td id="itm-2" class="itm-grid">2</td>
+                        <td id="cod-2" class="itm-grid">2HDMI-SRS</td>
+						<td id="dat-2" class="itm-grid cell-edit">30/05/2018</td>
+						<td id="cat-2" data-component="myCategories" class="itm-grid cell-edit">IT Hardware</td>
+                        <td id="dex-2" class="itm-grid cell-edit">Monitor SAMSUNG 2HDMI SRS 23"</td>
+						<td id="prc-2" class="itm-grid cell-edit text-right">299,99</td>
                         <td id="qta-2" class="itm-grid cell-edit text-right">1</td>
-                        <td id="impt-2" class="itm-grid text-right">12.20</td>
-                        <td id="sconto-2" class="itm-grid cell-edit text-right">0</td>
-                        <td id="imps-2" class="itm-grid text-right  cell-edit">12.20</td>
-                        <td id="aliquota-2" class="itm-grid text-right  cell-edit">20</td>
-                        <td id="iva-2" class="itm-grid text-right">14.40</td>
-                        <td id="imp-2" class="itm-grid text-right">16.60</td>
+						<td id="amt-2" class="itm-grid text-right">299,99</td>
+                        <td id="dis-2"  data-component="myDiscounts" class="itm-grid combo-save-text cell-edit">none</td>
+						<td id="stk-2" class="itm-grid cell-edit" title="Is Out of stock?"><input id="ck-1" type="checkbox" title="Is Out of stock?" class="i-checks form-control form-inline" />  </td>
+                        <td id="grs-2" class="itm-grid text-right">299,99</td>
+                        <td id="tot-2" class="itm-grid text-right">299,99</td>
                          
 
                     </tr>
 
-       <tr>
-                         
-                        <td id="id-3" class="itm-grid">3</td>
-                        <td id="code-3" data-type="date" class="itm-grid">TP03</td>
-                        <td id="dex-3" class="itm-grid cell-edit">Monitor 12" ASUS</td>
-                        <td id="prezzo-3" class="itm-grid cell-edit text-right">84</td>
-                        <td id="qta-3" class="itm-grid cell-edit text-right">2</td>
-                        <td id="impt-3" class="itm-grid text-right">84</td>
-                        <td id="sconto-3" class="itm-grid cell-edit text-right">0</td>
-                        <td id="imps-3" class="itm-grid text-right  cell-edit">84</td>
-                        <td id="aliquota-3" class="itm-grid text-right  cell-edit">20</td>
-                        <td id="iva-3" class="itm-grid text-right">86</td>
-                        <td id="imp-3" class="itm-grid text-right">88.20</td>
-                         
-
-                    </tr>
+       
 					
                 </tbody>
 
@@ -109,7 +122,7 @@
         
 
      <p class="bg-yellow">
-	   Handler per il LiveEdit di un oggetto Table.
+	   Editable DataTable - LiveEdit immediate update database and refresh
      </p>
 	 <p class="bg-yellow">
    Includi questo js nella pagina dove vuoi che il table diventi editable
