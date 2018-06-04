@@ -245,13 +245,13 @@ function AnchorEditableObjects() {
         $('input:checkbox').change(function (e) {
 
 		   // checkbox changed
-		   
+		   /*
 		   e.preventDefault();
 		   var value= $(this).attr('checked') == 'checked';
 		   ApplyLocalChanges(CellData); //<-- function locale specifica della tabella se deve fare dei calcoli (es calcolare l'importo se cambia prezzo o qta) 
 		   LiveUpdate(CellData); // <-- qui invia le modifiche al server db
 		   ClickRaised = false;
-		   
+		   */
           //  alert('clicked');
             //var nval = $(this).attr('checked') == 'checked';
             //e.preventDefault();
@@ -266,6 +266,22 @@ function AnchorEditableObjects() {
 
     });
 
+	 $('input:checkbox').change(function (e) {
+
+		   // checkbox changed
+		  
+		   ClickRaised = false;
+		   e.preventDefault();
+		   var value= $(this).attr('checked') == 'checked';
+		   ECCLog('checkbox click='+value);
+		   ApplyLocalChanges(CellData); //<-- function locale specifica della tabella se deve fare dei calcoli (es calcolare l'importo se cambia prezzo o qta) 
+		   LiveUpdate(CellData); // <-- qui invia le modifiche al server db
+		 
+		   
+		   
+     });
+
+	
 } // end AnchorEditableObjects 
 
 // ==========================================
